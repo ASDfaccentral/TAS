@@ -12,86 +12,91 @@ Write your code in this editor and press "Run" button to compile and execute it.
 typedef struct elt {
     int Nombre;
     int Taille; 
-    int Tab[];
+    int *Tab;
     int type;
-}
+}TAS;
 
-Tas * CreerTAS (int N, int type)
+TAS * CreerTAS (int N, int type)
 {
-    TAS T;
-    T= (TAS *)malloc(Sizeof (TAS));
-    T.Taille = N;
-    T.Nombre= 0;
-    T.Tab= (int *)malloc (N*Sizeof(int));
-    T.type=type;
+    TAS *T;
+    T= (TAS *)malloc(sizeof (TAS));
+    T->Taille = N;
+    T->Nombre= 0;
+    T->Tab= (int *)malloc (N*sizeof(int));
+    T->type=type;
 }
 
-int FilsGauche(TAS T, int i)
+int FilsGauche(TAS *T, int i)
 { int FG = i*2+1;
-    if (FG > T.Nombre) return(-1);
+    if (FG > T->Nombre) return(-1);
     return (FG);
 }
 
 
-int FilsDroit(TAS T, int i)
+int FilsDroit(TAS *T, int i)
 { int FD = i*2+2;
-    if (FG > T.Nombre) return(-1);
+    if (FD > T->Nombre) return(-1);
     return (FD);
 }
 
-PercollerBAs (TAS T, int i)
+void PercollerBAs (TAS *T, int i)
 {
     int FG, FD, MAX, temp;
     FG = FilsGauche(T,i);
     FG = FilsDroit(T,i);
     MAX =i;
-    if ((FG != -1)&&(T.Tab[MAX]< T.Tab[FG])) MAX =FG;
-    if ((FD != -1)&&(T.Tab[MAX]< T.Tab[FD])) MAX =FD;
-    if (MAX != i) { temp = T.Tab[i];
-                    T.Tab[i]=T.Tab[MAX];
-                    T.Tab[MAX]= temp;
+    if ((FG != -1)&&(T->Tab[MAX]< T->Tab[FG])) MAX =FG;
+    if ((FD != -1)&&(T->Tab[MAX]< T->Tab[FD])) MAX =FD;
+    if (MAX != i) { temp = T->Tab[i];
+                    T->Tab[i]=T->Tab[MAX];
+                    T->Tab[MAX]= temp;
                    }
     
 }
 
-int Supprimer (TAS T)
+int Supprimer (TAS *T)
 {
-    int val,;
+    int val;
     
-    if (T.Nombre=0) return(-1);
-    val = T.Tab[T.Nombre];
-    T.Nombre--;
+    if (T->Nombre=0) return(-1);
+    val = T->Tab[T->Nombre];
+    T->Nombre--;
     PercollerBAs(T,0);
     return(val);
     
 }
 
-Resize (T TAS)
+void Resize (TAS *T)
 {
-    int Tem[]= T.Tab;
+    int *Tem,i;
+    Tem= T->Tab;
     
-     T.Tab= (int *)malloc ((T.Taille*2)*Sizeof(int));
-     T.Taille=(T.Taille*2);
+     T->Tab= (int *)malloc ((T->Taille*2)*sizeof(int));
+     T->Taille=(T->Taille*2);
     
-    for (i=0;i<T.Taille/2;i++)
-    {T.Tab[i]=Temp[i];}
+    for (i=0;i<T->Taille/2;i++)
+    {T->Tab[i]=Tem[i];}
     free(Tem);
 }
 
 
-Inserer (T TAS, int val)
-{
-    if (T.Taille==T.Nombre) Resize (T);
-    T.Nombre++;
-    i=T.Nombre-1;
-    while ((i>0)&&(T.Tab[(i-1)/2]<val)) {T.Tab[i]=Tab[(i-1)/2]; i=(i-1)/2;}
-    T.Tab[i]=val;
+void Inserer (TAS *T, int val)
+{ int i;
+    if (T->Taille==T->Nombre) Resize (T);
+    T->Nombre++;
+    i=T->Nombre-1;
+    while ((i>0)&&(T->Tab[(i-1)/2]<val)) {T->Tab[i]=T->Tab[(i-1)/2]; i=(i-1)/2;}
+    T->Tab[i]=val;
 }
 
-ConstruireTAS ()
-{
-    for (i=(T.Nombre-1)/2; i>0; i--) {PercollerBAs(T,i);}
-    
+TAS * ConstruireTAS ( int Temp[], int N )
+{   int i;
+    TAS *T;
+    T=CreerTAS(N*2, 1);
+     for (i=0; i<N; i++) T->Tab[i]= Temp[i];
+     T->Taille=N;
+    for (i=(T->Nombre-1)/2; i>0; i--) {PercollerBAs(T,i);}
+    return (T);
 }
 
 
@@ -102,8 +107,16 @@ ConstruireTAS ()
  * ******************************************************************/
 
 
+
+
+
+
 int main()
-{
+{   int i;
+    TAS *T= CreerTAS(20,1);
+    for (i=0;i<5;i++) Inserer(T,i);
+    for (i=0;i<T->Nombre-1; i++) printf("%d ",T->Tab[i]);
+    
     printf("Hello World");
 
     return 0;
