@@ -1,9 +1,7 @@
 /******************************************************************************
-
                             Online C Compiler.
                 Code, Compile, Run and Debug C program online.
 Write your code in this editor and press "Run" button to compile and execute it.
-
 *******************************************************************************/
 
 #include<stdio.h>
@@ -56,7 +54,7 @@ void Init_stack(pile **p)
     (*p)=NULL;
 }
 
-/* vérifier si la pile est vide */ 
+/* vC)rifier si la pile est vide */ 
 
 bool PisEmpty (pile *p)
 {
@@ -65,7 +63,7 @@ bool PisEmpty (pile *p)
 
 
 
-/* Fonction qui Empile un élement dans la pile */
+/* Fonction qui Empile un C)lement dans la pile */
 
 void push(pile ** Sommet, tree *t) 
 { 
@@ -89,7 +87,7 @@ void push(pile ** Sommet, tree *t)
   (*Sommet)    = new_tNode; 
 } 
 
-/* Fonction qui depiler une élement de la pile*/
+/* Fonction qui depiler une C)lement de la pile*/
 tree *pop(pile ** Sommet) 
 { 
   tree *res; 
@@ -183,14 +181,14 @@ TAS * CreerTAS (int N, int type)
 
 int FilsGauche(TAS *T, int i)
 { int FG = (i*2)+1;
-    if (FG > T->Nombre) return(-1);
+    if (FG >= T->Nombre) return(-1);
     return (FG);
 }
 
 
 int FilsDroit(TAS *T, int i)
 { int FD = (i*2)+2;
-    if (FD > T->Nombre) return(-1);
+    if (FD >= T->Nombre) return(-1);
     return (FD);
 }
 
@@ -296,7 +294,23 @@ void afficher (tree *T)
                               }
 }
 
-
+void PercollerBAsMin (int *T, int i, int N)
+{
+    int FG, FD, MIN, temp;
+    FG =  (i*2)+1;
+    if (FG >= N) FG=-1;
+    FD =  (i*2)+2;
+    if (FD >= N) FD=-1;
+    MIN =i;
+    if ((FG != -1)&&(T[MIN]> T[FG])) MIN =FG;
+    if ((FD != -1)&&(T[MIN]> T[FD])) MIN =FD;
+    if (MIN != i) { temp = T[i];
+                    T[i]=T[MIN];
+                    T[MIN]= temp;
+                    PercollerBAsMin(T,MIN,N);
+                   }
+    
+}
 
 /***********************************************************************
  * EXox TD 
@@ -354,6 +368,28 @@ TAS * Deletekeme (TAS *T,  int k)
     
 }
 
+int kemepetit(TAS *T, int k)
+{  int tab[T->Nombre];
+   int i,j, temp,N;
+   
+    if (T==NULL) return (-1);
+    if ((k>T->Nombre)||(k <0)) return (-1);
+    for (i=0;i<T->Nombre; i++) tab[i]= T->Tab[i];
+      N=T->Nombre;
+     for(i=0;i<k;i++)
+     {
+        for(j=((N-1)/2);j>-1;j--) {PercollerBAsMin(tab,j,N);}
+        temp=tab[0];
+        tab[0]=tab[N-1];
+        tab[N-1]=temp;
+        N--;
+     }
+     temp=tab[N];
+     for (i=0;i<T->Nombre; i++) printf("%d  ",tab[i]);
+     printf("\n");
+     for (i=0;i<T->Nombre; i++) printf("%d  ",T->Tab[i]);
+     return(temp);
+}
 
 
 int main()
@@ -375,19 +411,20 @@ int main()
     printf("\n Question 4 :\n Avant:  ");
     ABR=Rand_Tree();
     afficher(ABR);
-    printf("\n Aprés : ");
+    printf("\n AprC)s : ");
     T2= ABRtoTAS(ABR);
      for (i=0;i<T2->Nombre; i++) printf("%d  ",T2->Tab[i]);
     
     printf("\n Question 5: Le min est %d\n", MinInTASMAX(T2));
     
-    printf("\n Question 6: Supprimer le 2 éme élement\n");
+    printf("\n Question 6: Supprimer le 2 C)me C)lement\n");
     T2=Deletekeme(T2,2);
     for (i=0;i<T2->Nombre; i++) printf("%d  ",T2->Tab[i]);
     
-    printf ("\n Question 7: Trouvez le kéme élément plus petit dans un TASMAX .... TO be continued")
+    printf ("\n Question 7: Trouvez le kC)me C)lC)ment plus petit dans un TASMAX \n");
+    scanf("%d",&val);
+    printf("Le %d C)me C)lC)ment est :%d ",val,kemepetit(T,val));
     
-     printf("Hello World");
 
     return 0;
 }
